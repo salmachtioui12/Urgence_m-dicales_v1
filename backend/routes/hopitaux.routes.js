@@ -8,13 +8,30 @@ router.get('/', async (req, res) => {
   if (!lat || !lng) return res.status(400).json({ error: "lat et lng requis" });
 
   try {
-    const hopitaux = await fetchHopitauxNearby(lat, lng, radius);
-    res.json(hopitaux);
+    const overpassHopitaux = await fetchHopitauxNearby(lat, lng, radius);
+
+    const hopitauxComplets = await Promise.all(overpassHopitaux.map(async (hopital) => {
+      const stock = await Hopital.findOne({ osmId: hopital.id });
+
+      // 🔁 Remplacer adresse si absente
+      const adresseFinale = hopital.adresse && hopital.adresse.trim() !== ""
+        ? hopital.adresse
+        : stock?.adresse ?? "Adresse inconnue";
+
+      return {
+        ...hopital,
+        adresse: adresseFinale,
+        nombreAmbulances: stock?.nombreAmbulances ?? null,
+      };
+    }));
+
+    res.json(hopitauxComplets);
   } catch (err) {
     console.error("❌ Erreur Overpass API:", err);
     res.status(500).json({ error: "Erreur API Overpass" });
   }
 });
+
 
 router.get('/stocks', async (req, res) => {
   try {
@@ -25,7 +42,7 @@ router.get('/stocks', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/api/hopitaux', async (req, res) => {
   const { osmId, nom, adresse, position, nombreAmbulances } = req.body;
   try {
     const hopital = new Hopital({ osmId, nom, adresse, position, nombreAmbulances });

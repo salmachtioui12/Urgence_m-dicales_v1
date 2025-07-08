@@ -17,32 +17,30 @@ async function fetchHopitauxNearby(lat, lng, radius = 5000) {
   const response = await fetch(url);
   const data = await response.json();
 
-  return await Promise.all(data.elements
-    .filter(el => (el.lat || el.center?.lat) && (el.lon || el.center?.lon))
-    .map(async h => {
-      const tags = h.tags || {};
-      const adresse = [
-        tags["addr:housenumber"],
-        tags["addr:street"],
-        tags["addr:postcode"],
-        tags["addr:city"]
-      ].filter(Boolean).join(', ');
+return await Promise.all(data.elements
+  .filter(el => (el.lat || el.center?.lat) && (el.lon || el.center?.lon))
+  .map(async h => {
+    const tags = h.tags || {};
+    const adresse = [
+      tags["addr:housenumber"],
+      tags["addr:street"],
+      tags["addr:postcode"],
+      tags["addr:city"]
+    ].filter(Boolean).join(', ');
 
-      const position = {
-        lat: h.lat || h.center?.lat,
-        lng: h.lon || h.center?.lon,
-      };
+    const position = {
+      lat: h.lat || h.center?.lat,
+      lng: h.lon || h.center?.lon,
+    };
 
-      const hopitalLocal = await Hopital.findOne({ osmId: h.id });
+    return {
+      id: h.id,
+      nom: tags.name || "Hôpital inconnu",
+      adresse: adresse || null, // 🔁 Important : ne pas mettre ici "Adresse inconnue"
+      position,
+    };
+  }));
 
-      return {
-        id: h.id,
-        nom: tags.name || "Hôpital inconnu",
-        adresse: adresse || "Adresse inconnue",
-        position,
-        nombreAmbulances: hopitalLocal?.nombreAmbulances ?? null,
-      };
-    }));
 }
 
 module.exports = { fetchHopitauxNearby };
