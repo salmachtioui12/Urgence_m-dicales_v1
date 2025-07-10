@@ -15,6 +15,9 @@ connectDB();
 // Simulation auto
 const { startAutoGeneration } = require('./services/appels.service');
 const { simulerDeplacement } = require('./services/agents.service');
+const ambulancesRoutes = require("./routes/ambulances.routes");
+app.use("/api/ambulances", ambulancesRoutes);
+
 
 startAutoGeneration();                     // ✅ Activer génération automatique des appels
 setInterval(simulerDeplacement, 5000);     // ✅ Mouvement des agents toutes les 5s

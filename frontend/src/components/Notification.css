@@ -1,0 +1,132 @@
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 0px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInScale 0.3s forwards;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: white;
+}
+
+.notification.success {
+  border-left: 5px solid #2E7D32;
+}
+
+.notification.error {
+  border-left: 5px solid #C62828;
+}
+
+.notification.warning {
+  border-left: 5px solid #EF6C00;
+}
+
+.notification.info {
+  border-left: 5px solid #1565C0;
+}
+
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.notification-icon {
+  margin-right: 15px;
+  font-size: 14px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+/* Couleurs des icônes selon le type */
+.notification.success .notification-icon {
+  background-color: #2E7D32; /* Vert pour success */
+}
+
+.notification.error .notification-icon {
+  background-color: #C62828; /* Rouge pour error */
+}
+
+.notification.warning .notification-icon {
+  background-color: #EF6C00; /* Orange pour warning */
+}
+
+.notification.info .notification-icon {
+  background-color: #1565C0; /* Bleu pour info */
+}
+
+.notification-text {
+  flex-grow: 1;
+}
+
+.notification-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.notification-message {
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: gray;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 15px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.notification-close:hover {
+  opacity: 1;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes fadeOutScale {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.notification.fade-out {
+  animation: fadeOutScale 0.3s forwards;
+}

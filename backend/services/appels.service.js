@@ -54,16 +54,12 @@ function genererNomPatient(heureAppel) {
   const randomSuffix = Math.floor(Math.random() * 900 + 100);
   return `Patient-${timestamp}-${randomSuffix}`;
 }
-async function genererAppel() {
+async function genererAppel(forceGravite = null) {
   try {
-    const gravite = genererGravite();
+    const gravite = forceGravite || genererGravite();
     const position = genererPosition();
     const heureAppel = genererHeureAppel();
-
-    // 🌍 Récupérer adresse avec sécurité
     const localisation = await getLocalisationFromCoords(position.lat, position.lng) || "Casablanca";
-
-    // Utilisation de la fonction sécurisée pour le nom du patient
     const patientName = genererNomPatient(heureAppel);
 
     const appel = new Appel({
@@ -85,6 +81,7 @@ async function genererAppel() {
     return null;
   }
 }
+
 
 
 async function getAppels() {

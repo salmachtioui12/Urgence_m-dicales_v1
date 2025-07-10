@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
     const hopitauxComplets = await Promise.all(overpassHopitaux.map(async (hopital) => {
       const stock = await Hopital.findOne({ osmId: hopital.id });
-
+ 
       // 🔁 Remplacer adresse si absente
       const adresseFinale = hopital.adresse && hopital.adresse.trim() !== ""
         ? hopital.adresse
@@ -22,6 +22,7 @@ router.get('/', async (req, res) => {
         ...hopital,
         adresse: adresseFinale,
         nombreAmbulances: stock?.nombreAmbulances ?? null,
+        ambulances: stock?.ambulances ?? []
       };
     }));
 
@@ -43,9 +44,9 @@ router.get('/stocks', async (req, res) => {
 });
 
 router.post('/api/hopitaux', async (req, res) => {
-  const { osmId, nom, adresse, position, nombreAmbulances } = req.body;
+  const { osmId, nom, adresse, position, nombreAmbulances,ambulances } = req.body;
   try {
-    const hopital = new Hopital({ osmId, nom, adresse, position, nombreAmbulances });
+    const hopital = new Hopital({ osmId, nom, adresse, position, nombreAmbulances,ambulances });
     await hopital.save();
     res.status(201).json(hopital);
   } catch (err) {
