@@ -118,6 +118,15 @@ function stopAutoGeneration() {
   }
 }
 
+
+
+const { prioriserEtAffecterAmbulances } = require('../services/appels.service');
+
+router.post('/affectation-auto', async (req, res) => {
+  await prioriserEtAffecterAmbulances();
+  res.json({ message: '✅ Ambulances affectées automatiquement selon la priorité.' });
+});
+
 module.exports = {
   genererAppel,
   getAppels,

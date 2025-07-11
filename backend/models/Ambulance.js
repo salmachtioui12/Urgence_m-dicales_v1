@@ -5,7 +5,7 @@ const AmbulanceSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ['A', 'B', 'C'],
-    required: true,
+    required: true
   },
   etat: {
     type: String,

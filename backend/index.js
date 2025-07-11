@@ -31,3 +31,14 @@ app.use('/api/hopitaux', require('./routes/hopitaux.routes'));
 app.listen(PORT, () => {
   console.log(`✅ Serveur backend sur http://localhost:${PORT}`);
 });
+const Hopital = require("./models/Hopital");
+
+(async () => {
+  const h = new Hopital({
+    nom: "Test Middleware",
+    position: { lat: 0, lng: 0 },
+    ambulances: [{ id: 1, type: "A" }]
+  });
+
+  await h.save(); // ✅ Doit afficher dans la console
+})();
