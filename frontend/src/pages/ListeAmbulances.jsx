@@ -303,10 +303,10 @@ export default function ListeAmbulances() {
         <select value={filtre.type} onChange={(e) => setFiltre({ ...filtre, type: e.target.value })}
           style={{ padding: "6px 10px", borderRadius: 6, border: "1px solid #ccc", minWidth: 140, fontSize: 12 }}>
           <option value="">Type (tous)</option>
-          <option value="medicalisee">Médicalisée</option>
-          <option value="urgence">Urgence</option>
-          <option value="transfert">Transfert</option>
-          <option value="neonatale">Néonatale</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        
         </select>
 
         <select value={filtre.etat} onChange={(e) => setFiltre({ ...filtre, etat: e.target.value })}
@@ -377,13 +377,14 @@ export default function ListeAmbulances() {
                 <div style={{ fontWeight: 500 }}>123 Main St, Anytown</div>
               </div>
 
-              {/* Zone arrivée */}
-              <div style={{ backgroundColor: "#f8f9fa", borderRadius: 6, padding: 6, marginBottom: 6 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", color: "#6c757d", fontSize: 11 }}>
-                  <FaMapMarkerAlt /> <span>12.05.2023 12:00 AM</span>
-                </div>
-                <div style={{ fontWeight: 500 }}>456 Elm Ave, Springfield</div>
-              </div>
+             {amb.etat === "en mission" && amb.destination && (
+  <div style={{ backgroundColor: "#f8f9fa", borderRadius: 6, padding: 6, marginBottom: 6 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", color: "#6c757d", fontSize: 11 }}>
+      <FaMapMarkerAlt /> <span>Destination</span>
+    </div>
+    <div style={{ fontWeight: 500 }}>{amb.destination}</div>
+  </div>
+)}
 
               <div style={{ borderTop: "1px dashed #dee2e6", paddingTop: 6, color: "#6c757d" }}>
                 <div><FaHospitalSymbol /> {" "}<strong>Affectée à:</strong> {amb.hopitalId?.nom || "Non affectée"}</div>

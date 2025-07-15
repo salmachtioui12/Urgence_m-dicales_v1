@@ -21,6 +21,10 @@ const AmbulanceSchema = new mongoose.Schema({
     ref: "Hopital",
     required: true,
   },
+  destination: {
+    type: String,
+    default: null,
+  }
 });
 
 module.exports = mongoose.model("Ambulance", AmbulanceSchema);

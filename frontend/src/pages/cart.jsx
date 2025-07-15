@@ -623,7 +623,7 @@ function Cart() {
   const fetchHopitaux = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/api/hopitaux?lat=${center.lat}&lng=${center.lng}&radius=5000`
+        `http://localhost:3000/api/hopitaux?lat=${center.lat}&lng=${center.lng}&radius=15000`
       );
       setHopitaux(await res.json());
     } catch (error) {
@@ -635,7 +635,7 @@ function Cart() {
   const changerStatut = async (id, statutActuel) => {
     try {
       const nouveauStatut =
-        statutActuel === "en attente" ? "en intervention" : statutActuel === "en intervention" ? "terminé" : "en attente";
+        statutActuel === "en attente" ? "en intervention" : statutActuel === "en intervention" ? "terminée" : "en attente";
 
       await fetch(`http://localhost:3000/appels/${id}/status`, {
         method: "PUT",
@@ -904,7 +904,7 @@ function Cart() {
         {appels.map((appel) => {
           let icon;
           if (appel.etat === "en intervention") icon = iconEnCours;
-          else if (appel.etat === "terminé") icon = iconTermine;
+          else if (appel.etat === "terminée") icon = iconTermine;
           else icon = iconEnAttente;
 
           const graviteColor =
@@ -981,8 +981,9 @@ function Cart() {
                   {h.adresse}
                   <br />
                   <span>
-                    <strong>🚑 Ambulances :</strong> {h.nombreAmbulances ?? "inconnu"}
-                  </span>
+  <strong>🚑 Ambulances :</strong> {Array.isArray(h.ambulances) ? h.ambulances.length : 0}
+</span>
+
                   <br />
                   {Array.isArray(h.ambulances) && h.ambulances.length > 0 && (
                     <div>

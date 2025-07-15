@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
+const interventionsRoutes = require("./routes/interventions.routes");
 // Connexion MongoDB
 connectDB();
 
@@ -27,10 +27,13 @@ app.use('/appels', require('./routes/appels.routes'));
 app.use('/agents', require('./routes/agents.routes'));
 app.use('/api/hopitaux', require('./routes/hopitaux.routes'));
 
+app.use("/interventions", interventionsRoutes);
+
 // Démarrage serveur
 app.listen(PORT, () => {
   console.log(`✅ Serveur backend sur http://localhost:${PORT}`);
 });
+/* Test
 const Hopital = require("./models/Hopital");
 
 (async () => {
@@ -42,3 +45,4 @@ const Hopital = require("./models/Hopital");
 
   await h.save(); // ✅ Doit afficher dans la console
 })();
+*/

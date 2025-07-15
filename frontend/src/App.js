@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar"; // Assure-toi du bon chemin
 import ListeAppels from "./pages/ListeAppels";
 import ListeHopitaux from "./pages/ListeHopitaux";
 import ListeAmbulances from "./pages/ListeAmbulances"
+import ListeInterventions from "./pages/ListeInterventions";
 export default function App() {
   return (
     <Router>
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/appels" element={<ListeAppels />} />
             <Route path="/hopitaux" element={<ListeHopitaux />} />
             <Route path="/ambulances" element={<ListeAmbulances />} />
+            <Route path="/interventions" element={<ListeInterventions />} />
           </Routes>
         </div>
       </div>

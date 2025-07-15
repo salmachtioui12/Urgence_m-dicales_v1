@@ -65,6 +65,21 @@ async function syncAmbulances(hopital) {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* 6.  MIDDLEWARE  :  cascade delete  des ambulances                  */
+/* ------------------------------------------------------------------ */
+HopitalSchema.post("findOneAndDelete", async function (doc) {
+  // findByIdAndDelete déclenche ce middleware car c’est un alias de findOneAndDelete
+  if (!doc) return; // rien à faire si l’hôpital n’existe pas
 
+  try {
+    const result = await Ambulance.deleteMany({ hopitalId: doc._id });
+    console.log(
+      `🗑️  ${result.deletedCount} ambulances supprimées (cascade) pour « ${doc.nom} »`
+    );
+  } catch (err) {
+    console.error("❌ Erreur durant la suppression en cascade :", err);
+  }
+});
 
 module.exports = mongoose.model("Hopital", HopitalSchema);

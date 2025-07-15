@@ -95,7 +95,7 @@ export default function ListeAppels() {
           <option value="">État (tous)</option>
           <option value="en attente">En attente</option>
           <option value="en intervention">En intervention</option>
-          <option value="terminé">Terminé</option>
+          <option value="terminée">Terminée</option>
         </select>
 
         <input
