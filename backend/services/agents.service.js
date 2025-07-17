@@ -15,7 +15,7 @@ function simulerDeplacement() {
       },
     };
   });
-  console.log("📍 Positions des agents mises à jour");
+  console.log(" Positions des agents mises à jour");
 }
 
 function getAgents() {

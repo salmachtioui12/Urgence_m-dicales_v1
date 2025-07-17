@@ -15,53 +15,13 @@ router.get("/en-cours", async (req, res) => {
 
     res.json(interventions);
   } catch (err) {
-    console.error("❌ Erreur récupération interventions :", err);
+    console.error(" Erreur récupération interventions :", err);
     res.status(500).json({ message: "Erreur serveur" });
   }
 });
 
 
-
-// ✅ Modifier le statut d'une intervention
-/* ✅ Modifier le statut d'une intervention
-router.put('/:id/statut', async (req, res) => {
-  const interventionId = req.params.id;
-  const { statut } = req.body;
-
-  try {
-    const intervention = await Intervention.findById(interventionId);
-    if (!intervention) {
-      return res.status(404).json({ message: "Intervention non trouvée" });
-    }
-
-    // Mettre à jour le statut de l'intervention
-    intervention.statut = statut;
-
-    // Si l'intervention est terminée
-    if (statut === "terminé") {
-      // 1. Rendre l'ambulance disponible
-      await Ambulance.findByIdAndUpdate(intervention.ambulanceId, {
-        etat: "disponible",
-        destination: null
-      });
-
-      // 2. Mettre à jour l'appel associé (état → terminé)
-      await Appel.findByIdAndUpdate(intervention.appelId, {
-        etat: "terminé"
-      });
-    }
-
-    await intervention.save();
-
-    res.json({ message: "Statut mis à jour", intervention });
-  } catch (err) {
-    console.error("Erreur mise à jour intervention :", err);
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-});
-//
-*/
-// ✅ Marquer une intervention comme terminée
+// Marquer une intervention comme terminée
 router.put('/:id/finish', async (req, res) => {
   try {
     const intervention = await Intervention.findById(req.params.id);

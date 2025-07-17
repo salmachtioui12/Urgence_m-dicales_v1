@@ -22,7 +22,7 @@ const InterventionSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  finEstimee: Date, // utile pour simulation
+  finEstimee: Date, 
   statut: {
     type: String,
     enum: ["en cours", "terminée"],

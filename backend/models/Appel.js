@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Intervention = require('./Intervention'); // adapte le chemin si besoin
+const Intervention = require('./Intervention'); 
 
 const appelSchema = new mongoose.Schema({
   description: String,
@@ -15,7 +15,7 @@ const appelSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-// Middleware avant suppression par findOneAndDelete ou findByIdAndDelete
+// Avant de supprimer un appel avec findOneAndDelete, on supprime toutes ses interventions liées,this représente la requête
 appelSchema.pre('findOneAndDelete', async function(next) {
   try {
     const appelId = this.getQuery()._id;
@@ -26,7 +26,7 @@ appelSchema.pre('findOneAndDelete', async function(next) {
   }
 });
 
-// Middleware avant suppression par remove() sur instance
+// Avant de supprimer un appel avec fremove, on supprime toutes ses interventions liées,this représente l'Appel
 appelSchema.pre('remove', async function(next) {
   try {
     await Intervention.deleteMany({ appelId: this._id });

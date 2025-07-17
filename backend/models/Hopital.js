@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 const Ambulance = require("./Ambulance");
 
-// 1. Schéma ambulance embarquée
+//  Schéma ambulance embarquée
 const EmbeddedAmbulanceSchema = new mongoose.Schema({
   id: { type: Number, required: true },
   type: { type: String, enum: ['A', 'B', 'C'], required: true }
 }, { _id: false });
 
-// 2. Schéma principal de l'hôpital
+//  Schéma hopital
 const HopitalSchema = new mongoose.Schema({
-  osmId: Number,
+  osmId: Number,//ID open street map 
   nom: { type: String, required: true },
   adresse: String,
   position: {
@@ -19,26 +19,26 @@ const HopitalSchema = new mongoose.Schema({
   ambulances: [EmbeddedAmbulanceSchema]
 });
 
-// 3. Middleware pour SAVE
+// 3. creation hopital + synchronisation(syncAmbulances) avec ambulances
 HopitalSchema.post('save', async function(hopital) {
-  console.log("✅ Middleware SAVE déclenché pour :", hopital.nom);
+  console.log(" Middleware SAVE déclenché pour :", hopital.nom);
   await syncAmbulances(hopital);
 });
 
-// 4. Middleware pour FINDONEANDUPDATE
+// update hopital + synchronisation(syncAmbulances) avec ambulances
 HopitalSchema.post('findOneAndUpdate', async function(result) {
   if (result) await syncAmbulances(result);
 });
 
-// 5. Fonction de synchronisation principale
+// 5. Fonction de synchronisation avec ambulances
 async function syncAmbulances(hopital) {
-  console.log("🔁 syncAmbulances appelée pour :", hopital.nom);
+  console.log(" syncAmbulances appelée pour :", hopital.nom);
   if (!hopital?.ambulances) return;
 
   try {
     const ambulanceIds = hopital.ambulances.map(a => a.id);
 
-    // Ajout / mise à jour des ambulances
+    // 	Crée ou met à jour les ambulances dans la base
     await Promise.all(hopital.ambulances.map(async (amb) => {
       await Ambulance.findOneAndUpdate(
         { id: amb.id, hopitalId: hopital._id },
@@ -52,33 +52,31 @@ async function syncAmbulances(hopital) {
       );
     }));
 
-    // 🔄 Suppression des ambulances supprimées
+    //  Supprime les ambulances de la base liées à l'hôpital supprimé
     const result = await Ambulance.deleteMany({
       hopitalId: hopital._id,
       id: { $nin: ambulanceIds }
     });
 
-    console.log(`🔄 ${ambulanceIds.length} ambulances synchronisées pour ${hopital.nom}`);
-    console.log(`🗑️ ${result.deletedCount} ambulances supprimées pour ${hopital.nom}`);
+    console.log(` ${ambulanceIds.length} ambulances synchronisées pour ${hopital.nom}`);
+    console.log(` ${result.deletedCount} ambulances supprimées pour ${hopital.nom}`);
   } catch (err) {
-    console.error("❌ Erreur synchro ambulances:", err);
+    console.error(" Erreur synchro ambulances:", err);
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* 6.  MIDDLEWARE  :  cascade delete  des ambulances                  */
-/* ------------------------------------------------------------------ */
+// delete d'un hopital
 HopitalSchema.post("findOneAndDelete", async function (doc) {
-  // findByIdAndDelete déclenche ce middleware car c’est un alias de findOneAndDelete
-  if (!doc) return; // rien à faire si l’hôpital n’existe pas
-
+ 
+  if (!doc) return; // rien à faire si l'hôpital n'existe pas
+ // si l'hopital existe  + suppression des ambulaces 
   try {
     const result = await Ambulance.deleteMany({ hopitalId: doc._id });
     console.log(
-      `🗑️  ${result.deletedCount} ambulances supprimées (cascade) pour « ${doc.nom} »`
+      `  ${result.deletedCount} ambulances supprimées (cascade) pour «${doc.nom}»`
     );
   } catch (err) {
-    console.error("❌ Erreur durant la suppression en cascade :", err);
+    console.error(" Erreur durant la suppression en cascade :", err);
   }
 });
 

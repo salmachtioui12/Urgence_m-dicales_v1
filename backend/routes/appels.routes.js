@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Appel = require('../models/Appel'); // <-- ajoute ça en haut, avec les autres requires
+const Appel = require('../models/Appel'); 
 
 const {
   getAppels,
@@ -8,6 +8,7 @@ const {
   startAutoGeneration,
   stopAutoGeneration,
   genererAppel,
+  prioriserEtAffecterAmbulances,
 } = require('../services/appels.service');
 
 // Récupérer tous les appels
@@ -37,11 +38,11 @@ router.post('/stop', (req, res) => {
 
 // Ajouter un appel manuellement (optionnel)
 router.post('/add', async (req, res) => {
-  console.log('📩 Requête reçue sur /appels/add');
+  console.log(' Requête reçue sur /appels/add');
   const appel = await genererAppel();
   res.json(appel);
 });
-// Réinitialiser tous les appels
+
 // Réinitialiser tous les appels + interventions liées
 router.delete('/reset', async (req, res) => {
   const Appel = require('../models/Appel');
@@ -58,7 +59,7 @@ router.delete('/reset', async (req, res) => {
     // Ensuite, supprimer les appels
     await Appel.deleteMany({ _id: { $in: appelIds } });
 
-    console.log("🧹 Tous les appels et interventions supprimés.");
+    console.log(" Tous les appels et interventions supprimés.");
     res.json({ message: 'Appels et interventions réinitialisés' });
   } catch (err) {
     console.error("Erreur lors de la réinitialisation :", err);
@@ -74,7 +75,7 @@ router.post('/surcharge', async (req, res) => {
   for (let i = 0; i < 10; i++) {
     appels.push(await genererAppel("critique"));
   }
-  console.log("⚠️ 10 appels critiques générés.");
+  console.log(" 10 appels critiques générés.");
   res.json(appels);
 });
 router.post('/manual', async (req, res) => {
@@ -110,7 +111,7 @@ router.post('/manual', async (req, res) => {
     return res.status(500).json({ message: 'Erreur serveur lors de la création d\'appel manuel' });
   }
 });
-// ➕ Créer deux appels simulés en une seule requête
+//  Créer deux appels simulés en une seule requête
 router.post('/double', async (req, res) => {
   try {
     // Générer UNE SEULE fois une date ISO complète
@@ -120,32 +121,14 @@ router.post('/double', async (req, res) => {
     const appel1 = await genererAppel(null, heureFixe);
     const appel2 = await genererAppel(null, heureFixe);
 
-    console.log("✅ Deux appels créés avec EXACTEMENT la même date :", heureFixe);
+    console.log(" Deux appels créés avec EXACTEMENT la même date :", heureFixe);
     res.status(201).json([appel1, appel2]);
   } catch (error) {
     console.error('Erreur lors de la création de deux appels :', error);
     res.status(500).json({ message: 'Erreur serveur lors de la création de deux appels' });
   }
 });
-///
-// ✅ Marquer l’intervention terminée + relancer affectation
-/*
-router.put('/:id/status', async (req, res) => {
-  const intervention = await Intervention.findById(req.params.id);
-  if (!intervention) return res.status(404).json({ message: "Intervention non trouvée" });
 
-  // Marquer l’intervention comme terminée
-  intervention.statut = 'terminée';
-  intervention.finEstimee = new Date();
-  await intervention.save();
-
-  // Mettre à jour l’appel lié (ceci libère l’ambulance + relance l’affectation)
-  const appel = await updateAppelStatus(intervention.appelId, 'terminée');
-
-  res.json({ message: "Intervention et appel terminés", appel });
-});
-
-*/
 
 
 module.exports = router;

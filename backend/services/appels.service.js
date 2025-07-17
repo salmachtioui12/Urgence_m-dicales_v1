@@ -5,7 +5,6 @@ const Intervention = require("../models/Intervention");
 
 let intervalId = null;
 
-// --- UTILS ---
 function genererGravite() {
   const r = Math.random();
   if (r < 0.2) return "critique";
@@ -42,7 +41,7 @@ async function getLocalisationFromCoords(lat, lng) {
       "Localisation inconnue"
     );
   } catch (err) {
-    console.error("🌐 Erreur Nominatim:", err.message);
+    console.error(" Erreur Nominatim:", err.message);
     return "Localisation inconnue";
   }
 }
@@ -59,7 +58,7 @@ function distance(pos1, pos2) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-// --- GENERER UN APPEL ---
+// genererAppel
 async function genererAppel(forceGravite = null) {
   try {
     const gravite = forceGravite || genererGravite();
@@ -79,11 +78,11 @@ async function genererAppel(forceGravite = null) {
       position,
     });
 
-    console.log(`✅ Appel sauvegardé : ${appel.description}`);
+    console.log(` Appel sauvegardé : ${appel.description}`);
     await prioriserEtAffecterAmbulances(); // Lancement de l'affectation automatique
     return appel;
   } catch (err) {
-    console.error("❌ Erreur génération appel :", err.message);
+    console.error(" Erreur génération appel :", err.message);
     return null;
   }
 }
@@ -92,7 +91,7 @@ function typeAmbulanceAutorise(gravite) {
   if (gravite === 'moyenne') return ['B', 'C'];
   return ['A', 'B', 'C'];
 }
-// --- AFFECTATION AUTOMATIQUE ---
+// AFFECTATION AUTOMATIQUE 
 async function prioriserEtAffecterAmbulances() {
   try {
     const appels = await Appel.find({ etat: "en attente" }).sort({ gravite: 1, heureAppel: 1 });
@@ -113,19 +112,19 @@ async function prioriserEtAffecterAmbulances() {
 
       if (!lockedAmb) continue;
 
-      // 🔁 Mettre à jour l’ambulance (en mission + destination)
+      //  Mettre à jour l’ambulance (en mission + destination)
       await Ambulance.findByIdAndUpdate(lockedAmb._id, {
         etat: "en mission",
         destination: appel.localisation,
       });
 
-      // 📞 Mettre à jour l’appel
+      //  Mettre à jour l’appel
       await Appel.findByIdAndUpdate(appel._id, {
         etat: "en intervention",
         ambulanceAffectee: lockedAmb._id,
       });
 
-      // 📝 Créer l’intervention
+      //  Créer l’intervention
       await Intervention.create({
         appelId: appel._id,
         ambulanceId: lockedAmb._id,
@@ -137,15 +136,14 @@ async function prioriserEtAffecterAmbulances() {
         statut: "en cours",
       });
 
-      console.log(`🚑 Ambulance ${lockedAmb._id} (type ${lockedAmb.type}) affectée à l'appel ${appel._id}`);
+      console.log(` Ambulance ${lockedAmb._id} (type ${lockedAmb.type}) affectée à l'appel ${appel._id}`);
     }
   } catch (err) {
-    console.error("❌ Erreur affectation automatique:", err.message);
+    console.error(" Erreur affectation automatique:", err.message);
   }
 }
 
 
-// --- AUTRES FONCTIONS ---
 async function getAppels() {
   return Appel.find().sort({ createdAt: -1 });
 }
@@ -193,7 +191,7 @@ async function affecterAmbulance(idAppel, idAmbulance) {
 function startAutoGeneration() {
   if (!intervalId) {
     intervalId = setInterval(() => genererAppel(), 30000 + Math.random() * 30000);
-    console.log("🚀 Génération automatique d'appels démarrée");
+    console.log(" Génération automatique d'appels démarrée");
   }
 }
 
@@ -201,11 +199,11 @@ function stopAutoGeneration() {
   if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
-    console.log("⛔ Génération automatique arrêtée");
+    console.log(" Génération automatique arrêtée");
   }
 }
 
-// --- EXPORT ---
+
 module.exports = {
   genererAppel,
   getAppels,
@@ -214,4 +212,5 @@ module.exports = {
   startAutoGeneration,
   stopAutoGeneration,
   prioriserEtAffecterAmbulances,
+  
 };

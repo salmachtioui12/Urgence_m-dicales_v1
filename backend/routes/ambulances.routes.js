@@ -3,7 +3,7 @@ const router = express.Router();
 const Ambulance = require("../models/Ambulance");
 const Hopital = require("../models/Hopital");
 
-// GET all ambulances with hopital info
+// GET all ambulances with hopital info(populate)
 router.get('/', async (req, res) => {
   try {
     const ambulances = await Ambulance.find().populate("hopitalId");

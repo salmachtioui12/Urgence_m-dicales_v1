@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Hopital = require('../models/Hopital');
 const { fetchHopitauxNearby } = require('../services/hopitaux.service');
-const mongoose = require('mongoose'); // <-- Ajoutez cette ligne
+const mongoose = require('mongoose'); 
 const ObjectId = mongoose.Types.ObjectId;
 router.get('/', async (req, res) => {
   const { lat, lng, radius } = req.query;
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     const hopitauxComplets = await Promise.all(overpassHopitaux.map(async (hopital) => {
       const stock = await Hopital.findOne({ osmId: hopital.id });
  
-      // 🔁 Remplacer adresse si absente
+      //  Remplacer adresse si absente
       const adresseFinale = hopital.adresse && hopital.adresse.trim() !== ""
         ? hopital.adresse
         : stock?.adresse ?? "Adresse inconnue";
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 
     res.json(hopitauxComplets);
   } catch (err) {
-    console.error("❌ Erreur Overpass API:", err);
+    console.error(" Erreur Overpass API:", err);
     res.status(500).json({ error: "Erreur API Overpass" });
   }
 });
@@ -43,7 +43,7 @@ router.get('/stocks', async (req, res) => {
     res.status(500).json({ error: "Erreur MongoDB" });
   }
 });
-
+// cree hopital
 router.post('/api/hopitaux', async (req, res) => {
   const { osmId, nom, adresse, position, nombreAmbulances,ambulances } = req.body;
   try {
@@ -54,9 +54,9 @@ router.post('/api/hopitaux', async (req, res) => {
     res.status(500).json({ error: "Erreur enregistrement MongoDB" });
   }
 });
-// ✅ Route PUT pour mettre à jour un hôpital existant
 
-// ✅ Route PUT corrigée pour déclencher le middleware 'save'
+
+// update hopital
 router.put('/:id', async (req, res) => {
   try {
     const hopital = await Hopital.findById(req.params.id); // récupère l'hôpital
@@ -68,36 +68,36 @@ router.put('/:id', async (req, res) => {
     hopital.position = req.body.position;
     hopital.ambulances = req.body.ambulances;
 
-    await hopital.save(); // ✅ déclenche le middleware 'post("save")'
+    await hopital.save(); // déclenche le middleware 'post("save")'
 
     res.json({
       message: "Hôpital et ambulances mis à jour avec succès",
       hopital
     });
   } catch (err) {
-    console.error("❌ Erreur de mise à jour:", err);
+    console.error("Erreur de mise à jour:", err);
     res.status(500).json({ error: "Erreur lors de la mise à jour de l'hôpital" });
   }
 });
 
 
 
-// TEST ULTIME - Route simplifiée
+// TEST 
 router.put('/test-route/:id', async (req, res) => {
-  console.log('✅ Route atteinte, ID:', req.params.id);
+  console.log(' Route atteinte, ID:', req.params.id);
   return res.status(200).json({ test: "OK" });
 });
-// ✅ Route DELETE pour supprimer un hôpital
+// Route DELETE pour supprimer un hôpital
 router.delete('/:id', async (req, res) => {
-  console.log("🔥 Suppression en cours pour ID :", req.params.id);
+  console.log(" Suppression en cours pour ID :", req.params.id);
   try {
     const hopital = await Hopital.findByIdAndDelete(req.params.id);
     if (!hopital) {
       return res.status(404).json({ error: "Hôpital non trouvé" });
     }
-    res.json({ message: "✅ Hôpital supprimé avec succès", hopital });
+    res.json({ message: " Hôpital supprimé avec succès", hopital });
   } catch (err) {
-    console.error("❌ Erreur suppression hôpital:", err);
+    console.error(" Erreur suppression hôpital:", err);
     res.status(500).json({ error: "Erreur lors de la suppression de l'hôpital" });
   }
 });

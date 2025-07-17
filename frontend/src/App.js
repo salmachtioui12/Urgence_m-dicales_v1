@@ -13,7 +13,7 @@ export default function App() {
         {/* Sidebar fixe */}
         <Sidebar />
 
-        {/* Contenu principal (zone routée) */}
+     
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Cart />} />

@@ -27,7 +27,7 @@ async function importerAmbulances() {
     }
   }
 
-  console.log("✅ Import terminé.");
+  console.log("Import terminé.");
   mongoose.disconnect();
 }
 
