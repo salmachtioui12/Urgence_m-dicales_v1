@@ -7,6 +7,11 @@ const appelSchema = new mongoose.Schema({
   localisation: String,
   heureAppel: Date,
   gravite: String,
+  notifie: {
+  type: Boolean,
+  default: false,
+}
+,
   ambulanceAffectee: { type: mongoose.Schema.Types.ObjectId, ref: 'Ambulance' },
   etat: String,
   position: {

@@ -4,7 +4,8 @@ const Intervention = require("../models/Intervention");
 const Ambulance = require("../models/Ambulance");
 const Appel = require("../models/Appel");
 const { updateAppelStatus } = require('../services/appels.service');
-
+const { getAllStats } = require('../services/stats.service');
+const { notifierStatistiques } = require('../websocket');
 // GET /interventions/en-cours
 router.get("/en-cours", async (req, res) => {
   try {
@@ -34,7 +35,9 @@ router.put('/:id/finish', async (req, res) => {
     await intervention.save();
 
     const appel = await updateAppelStatus(intervention.appelId, 'terminée');
-
+ //  Notifier nouvelles stats après chaque appel généré
+      const updatedStats = await getAllStats();
+      notifierStatistiques(updatedStats);
     return res.json({ message: "Intervention et appel terminés", appel });
   } catch (error) {
     console.error("Erreur lors de la fin d'intervention :", error);

@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Appel = require('../models/Appel'); 
-
+const { getAllStats } = require('../services/stats.service');
+const { notifierStatistiques } = require('../websocket');
 const {
   getAppels,
   updateAppelStatus,
@@ -9,6 +10,7 @@ const {
   stopAutoGeneration,
   genererAppel,
   prioriserEtAffecterAmbulances,
+  getDerniersAppels,
 } = require('../services/appels.service');
 
 // Récupérer tous les appels
@@ -58,7 +60,9 @@ router.delete('/reset', async (req, res) => {
 
     // Ensuite, supprimer les appels
     await Appel.deleteMany({ _id: { $in: appelIds } });
-
+//  Notifier nouvelles stats après chaque appel généré
+      const updatedStats = await getAllStats();
+      notifierStatistiques(updatedStats);
     console.log(" Tous les appels et interventions supprimés.");
     res.json({ message: 'Appels et interventions réinitialisés' });
   } catch (err) {
@@ -129,6 +133,15 @@ router.post('/double', async (req, res) => {
   }
 });
 
-
+// Récupérer les 5 derniers appels
+router.get('/recents', async (req, res) => {
+  try {
+    const derniersAppels = await getDerniersAppels();
+    res.json(derniersAppels);
+  } catch (err) {
+    console.error("Erreur récupération derniers appels :", err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
 
 module.exports = router;

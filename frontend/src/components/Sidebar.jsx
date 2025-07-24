@@ -17,8 +17,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const menu = [
-    { icon: <Home size={24} />, label: "Accueil", path: "/" },
-    { icon: <Map size={24} />, label: "Carte", path: "/" },
+    { icon: <Home size={24} />, label: "Accueil", path: "/dashboard" },
+    { icon: <Map size={24} />, label: "cart", path: "/cart" },
     { icon: <Ambulance size={24} />, label: "Ambulances", path: "/ambulances" },
     { icon: <PhoneCall size={24} />, label: "Appels d'urgence", path: "/appels" },
     { icon: <Hospital size={24} />, label: "Hôpitaux", path: "/hopitaux" },

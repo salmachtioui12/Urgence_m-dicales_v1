@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import Notification from "../components/Notification";
 import FormulaireAppelManuel from "./FormulaireAppelManuel";
+import { TruckElectric } from "lucide-react";
 
 const ambulanceTypeNames = {
   A: "Ambulance de type A (transport non urgent)",

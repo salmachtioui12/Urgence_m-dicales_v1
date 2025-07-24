@@ -36,7 +36,7 @@ return await Promise.all(data.elements
     return {
       id: h.id,
       nom: tags.name || "Hôpital inconnu",
-      adresse: adresse || null, //  Important : ne pas mettre ici "Adresse inconnue"
+      adresse: adresse || null,
       position,
     };
   }));

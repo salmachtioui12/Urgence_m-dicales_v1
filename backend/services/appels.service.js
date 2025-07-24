@@ -2,7 +2,10 @@ const axios = require("axios");
 const Appel = require("../models/Appel");
 const Ambulance = require("../models/Ambulance");
 const Intervention = require("../models/Intervention");
-
+const { notifierCasCritique } = require('../websocket'); // à adapter selon ton arborescence
+const { getAllStats } = require('./stats.service');
+const { notifierStatistiques } = require('../websocket');
+const { notifierDerniersAppels } = require('../websocket');
 let intervalId = null;
 
 function genererGravite() {
@@ -78,9 +81,29 @@ async function genererAppel(forceGravite = null) {
       position,
     });
 
-    console.log(` Appel sauvegardé : ${appel.description}`);
-    await prioriserEtAffecterAmbulances(); // Lancement de l'affectation automatique
-    return appel;
+ console.log(` Appel sauvegardé : ${appel.description}`);
+
+    // Essayer d’affecter automatiquement
+    await prioriserEtAffecterAmbulances();
+
+    //  Recharger l’appel depuis la base après affectation
+    const appelMisAJour = await Appel.findById(appel._id);
+
+    //  Seulement s’il est encore critique sans ambulance, on notifie
+    if (appelMisAJour.gravite === 'critique' && !appelMisAJour.ambulanceAffectee) {
+      console.log(' ALERTE CRITIQUE détectée sans ambulance affectée pour :', appelMisAJour.patientName);
+      notifierCasCritique(appelMisAJour);
+       //  Notifier nouvelles stats après chaque appel généré
+      const updatedStats = await getAllStats();
+      notifierStatistiques(updatedStats);
+      // après avoir sauvegardé un nouvel appel :
+const appelsRecents = await getDerniersAppels();
+notifierDerniersAppels(appelsRecents);
+    }
+
+    return appelMisAJour;
+
+    
   } catch (err) {
     console.error(" Erreur génération appel :", err.message);
     return null;
@@ -137,6 +160,9 @@ async function prioriserEtAffecterAmbulances() {
       });
 
       console.log(` Ambulance ${lockedAmb._id} (type ${lockedAmb.type}) affectée à l'appel ${appel._id}`);
+        //  Notifier nouvelles stats après chaque appel généré
+      const updatedStats = await getAllStats();
+      notifierStatistiques(updatedStats);
     }
   } catch (err) {
     console.error(" Erreur affectation automatique:", err.message);
@@ -175,6 +201,8 @@ async function updateAppelStatus(id, newStatus) {
 
     // 3. Relancer l’algorithme pour affecter à d’autres appels
     await prioriserEtAffecterAmbulances();
+    const updatedStats = await getAllStats();
+    notifierStatistiques(updatedStats);
   }
 
   return appel;
@@ -203,7 +231,23 @@ function stopAutoGeneration() {
   }
 }
 
+// notification en cas d'appel critique non aff
 
+function getAppels() {
+  return Appel.find().lean().then(appels => {
+    return appels.map(appel => ({
+      ...appel,
+      estCritiqueNonAffecte: appel.gravite === 'critique' && appel.ambulanceAffectee === null
+    }));
+  });
+}
+
+// Récupérer les 5 derniers appels triés par heureAppel
+async function getDerniersAppels(limit = 5) {
+  return await Appel.find()
+    .sort({ heureAppel: -1 }) // tri du plus récent au plus ancien
+    .limit(limit);
+}
 module.exports = {
   genererAppel,
   getAppels,
@@ -212,5 +256,6 @@ module.exports = {
   startAutoGeneration,
   stopAutoGeneration,
   prioriserEtAffecterAmbulances,
+getDerniersAppels,
   
 };

@@ -1,29 +1,29 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Cart from "./pages/cart";
-import Sidebar from "./components/Sidebar"; // Assure-toi du bon chemin
 import ListeAppels from "./pages/ListeAppels";
 import ListeHopitaux from "./pages/ListeHopitaux";
-import ListeAmbulances from "./pages/ListeAmbulances"
+import ListeAmbulances from "./pages/ListeAmbulances";
 import ListeInterventions from "./pages/ListeInterventions";
+import NotificationsPage from "./components/WebSocketNotifications";
+import DashboardKPI from "./components/DashboardKPI";
+import Layout from "./Layout";
+
 export default function App() {
   return (
     <Router>
-      <div style={{ display: "flex", height: "100vh" }}>
-        {/* Sidebar fixe */}
-        <Sidebar />
-
-     
-        <div style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<Cart />} />
-            <Route path="/appels" element={<ListeAppels />} />
-            <Route path="/hopitaux" element={<ListeHopitaux />} />
-            <Route path="/ambulances" element={<ListeAmbulances />} />
-            <Route path="/interventions" element={<ListeInterventions />} />
-          </Routes>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="cart"element={<Cart />} />
+          <Route path="appels" element={<ListeAppels />} />
+          <Route path="hopitaux" element={<ListeHopitaux />} />
+          <Route path="ambulances" element={<ListeAmbulances />} />
+          <Route path="interventions" element={<ListeInterventions />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="dashboard" element={<DashboardKPI />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
