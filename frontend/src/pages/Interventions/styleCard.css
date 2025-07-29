@@ -1,0 +1,102 @@
+.intervention-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #3498db;
+  transition: all 0.3s ease;
+  max-width: 400px;
+}
+
+.intervention-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status.en_cours {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.status.terminee {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.status.en_attente {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #34495e;
+  font-size: 0.9rem;
+}
+
+.icon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+  background-color: #219653;
+}
+
+@media (max-width: 480px) {
+  .intervention-card {
+    padding: 15px;
+  }
+  
+  .card-header h3 {
+    font-size: 1rem;
+  }
+}

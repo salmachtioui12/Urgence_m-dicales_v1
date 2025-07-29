@@ -1,0 +1,468 @@
+:root {
+  --blue-500: #4299e1;
+  --blue-600: #3182ce;
+  --blue-800: #2c5282;
+  --red-500: #f56565;
+  --red-600: #e53e3e;
+  --red-700: #c0392b;
+  --gray-100: #f7fafc;
+  --gray-200: #edf2f7;
+  --gray-300: #e2e8f0;
+  --gray-400: #cbd5e0;
+  --gray-500: #a0aec0;
+  --gray-600: #718096;
+  --gray-700: #4a5568;
+  --gray-800: #2d3748;
+  --green-600: #38a169;
+}
+
+.liste-hopitaux-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.title {
+  text-align: left;
+    color: #2c3e50;
+  margin: 2rem 0 3rem;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 700;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(19, 11, 89), #4cc9f0);
+  border-radius: 3px;
+}
+
+
+.filter-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+
+.filter-input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+  max-width: 300px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+@keyframes input-focus {
+  0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.1); }
+  100% { box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1); }
+}
+
+.filter-input:focus {
+  animation: input-focus 0.3s ease-out;
+}
+
+.hopitaux-list {
+  display: grid;
+  gap: 20px;
+}
+
+.hopital-card {
+  background: linear-gradient(to right, #ffffff, #f9fafb);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  border: 1px solid #e1e8ef;
+  animation: slideFadeIn 0.4s ease-in-out;
+}
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hopital-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.hopital-card.editing {
+  box-shadow: 0 0 0 2px var(--blue-500);
+  border-color: var(--blue-500);
+}
+
+.hopital-card h3 {
+  margin: 0 0 10px 0;
+  color: var(--blue-800);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.adresse {
+  margin: 8px 0 18px;
+  color: var(--gray-600);
+  font-style: italic;
+  font-size: 15px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--gray-700);
+  margin-bottom: 30px;
+}
+
+.ambulances-list {
+  margin: 5px 0 0 20px;
+  padding: 0;
+}
+
+.ambulances-list li {
+  list-style: none;
+  background-color: #f1f5f9;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: background-color 0.2s;
+}
+
+.card-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.edit-btn {
+  background-color: var(--blue-500);
+  color: white;
+  border-radius: 18px;
+}
+
+.edit-btn:hover {
+  background-color: #2b6cb0;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background-color: var(--red-500);
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c53030;
+  transform: translateY(-1px);
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-form h3 {
+  margin: 0 0 10px 0;
+  color: var(--gray-800);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.form-group input, .form-group select {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-300);
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.position-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.position-inputs input {
+  flex: 1;
+}
+
+.ambulance-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ambulance-row input {
+  width: 80px;
+}
+
+.ambulance-row select {
+  flex: 1;
+}
+
+.add-ambulance {
+  margin-top: 15px;
+}
+
+.add-btn, .remove-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.add-btn:hover, .remove-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.add-btn:hover {
+  background-color: var(--green-600);
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: var(--red-600);
+  color: white;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.cancel-btn, .save-btn {
+  padding: 10px 20px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background-color: white;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-700);
+}
+
+.cancel-btn:hover {
+  background-color: var(--gray-100);
+}
+
+.save-btn {
+  background-color: var(--blue-500);
+  border: none;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: var(--blue-600);
+}
+
+.no-results {
+  text-align: center;
+  color: var(--gray-600);
+  padding: 30px 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--gray-300);
+  background-color: white;
+  color: var(--gray-700);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 40px;
+  text-align: center;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: var(--gray-100);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-btn.active {
+  background-color: var(--blue-500);
+  color: white;
+  border-color: var(--blue-500);
+}
+
+.confirm-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.confirm-dialog {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.confirm-message {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.confirm-cancel, .confirm-ok {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.confirm-cancel {
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+}
+
+.confirm-cancel:hover {
+  background-color: #bdc3c7;
+}
+
+.confirm-ok {
+  background-color: var(--red-600);
+  color: white;
+}
+
+.confirm-ok:hover {
+  background-color: var(--red-700);
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .filter-container {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-start;
+  }
+  
+  .filter-input {
+    max-width: none;
+  }
+}

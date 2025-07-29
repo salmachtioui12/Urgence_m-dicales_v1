@@ -1,0 +1,120 @@
+.liste-appels-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.liste-appels-title {
+  text-align: left;
+    color: #2c3e50;
+  margin: 2rem 0 3rem;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 700;
+  position: relative;
+}
+.liste-appels-title::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 0; /* ⬅️ was 50% + transform */
+  width: 5rem;
+  height: 0.25rem;
+  background: linear-gradient(90deg, rgb(19, 11, 89), #4cc9f0);
+  border-radius: 2px;
+}
+.filtres-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+  justify-content: center;
+}
+
+.filtre-select,
+.filtre-input {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1.5px solid #bdc3c7;
+  font-size: 14px;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.filtre-input[type="text"],
+.filtre-input[type="datetime-local"] {
+  min-width: 250px;
+}
+
+.liste-appels-cards {
+  display: grid;
+  gap: 20px;
+}
+
+.appel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.appel-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.appel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 10px;
+}
+
+.appel-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.appel-gravite {
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  min-width: 90px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.05); /* Fallback, overwritten inline */
+}
+
+.appel-description {
+  margin: 4px 0;
+  color: #555;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.appel-infos {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #555;
+}
+
+.appel-etat {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.no-appels {
+  text-align: center;
+  color: #7f8c8d;
+}

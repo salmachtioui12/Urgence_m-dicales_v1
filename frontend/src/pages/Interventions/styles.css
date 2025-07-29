@@ -1,0 +1,203 @@
+.interventions-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.page-title {
+  text-align: left;
+    color: #2c3e50;
+  margin: 2rem 0 3rem;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 700;
+  position: relative;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(19, 11, 89), #4cc9f0);
+  border-radius: 3px;
+}
+
+.filtres-container {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  background: transparent;
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.filtre-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filtre-group select,
+.filtre-group input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.filtre-group select:focus,
+.filtre-group input:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.filtre-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.no-results {
+  text-align: center;
+  color: #95a5a6;
+  padding: 2rem;
+}
+
+.interventions-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.intervention-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border-left: 3px solid #8f98be;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  cursor: pointer;
+}
+
+.intervention-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left-color: #3a56d4;
+}
+
+.card-content {
+  margin-bottom: 2rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.intervention-card:hover .card-header {
+  transform: translateX(3px);
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.gravite-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: transform 0.3s ease;
+}
+
+.intervention-card:hover .gravite-badge {
+  transform: scale(1.05);
+}
+
+.gravite-badge.critique {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.gravite-badge.moyenne {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.gravite-badge.faible {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.card-details {
+  color: #4b5563;
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.intervention-card:hover .card-details {
+  transform: translateX(2px);
+}
+
+.card-details p {
+  margin: 0.4rem 0;
+}
+
+.label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.card-actions {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.intervention-card:hover .card-actions {
+  transform: translateY(-3px);
+}
+
+.terminer-btn {
+  padding: 0.5rem 1rem;
+  background-color: #219e4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.terminer-btn:hover {
+  background-color: #15803d;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .filtres-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,172 @@
+.liste-container {
+  max-width: 1000px;
+  margin: 10px auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 5px;
+}
+
+/* Titre */
+.liste-title {
+  text-align: left;
+  color: #2c3e50;
+  margin: 2rem 0 3rem;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 700;
+  position: relative;
+}
+.liste-title::after{
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 4%;
+  transform: translateX(-50%);
+  width: 5rem;
+  height: 0.25rem;
+  background: linear-gradient(90deg, rgb(19, 11, 89), #4cc9f0);
+  border-radius: 2px;
+}
+
+/* Filtres */
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+  background-color: #f1f3f5;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.filtres select,
+.filtres input {
+   padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  flex: 1 1 200px;
+  background-color: #f8f9fa ;
+}
+
+.filtre-select:focus,
+.filtre-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* Message aucune ambulance */
+.no-results {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  color: #6c757d;
+}
+
+/* Grille de cartes */
+.ambulance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.ambulance-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(186, 86, 86, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease;
+}
+.ambulance-card:hover {
+  transform: translateY(-3px);
+}
+
+
+.card-border-disponible {
+  border-bottom: 4px solid #28a745;
+}
+
+.card-border-mission {
+  border-bottom: 4px solid #dc3545;
+}
+
+.card-border-maintenance {
+  border-bottom: 4px solid #ffc107;
+}
+
+.card-header {
+  display: flex;
+  color: #4c545d;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.etat-label {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.etat-disponible {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+}
+
+.etat-mission {
+  background-color: #fcebea;
+  color: #c62828;
+}
+
+.etat-maintenance {
+  background-color: #fff9e6;
+  color: #b28900;
+}
+
+.card-type,
+.zone,
+.card-footer {
+  font-size: 13px;
+  color: #333;
+}
+
+.card-type span {
+  font-weight: 500;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 3px 6px;
+}
+
+/* Zone infos */
+.zone {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.zone-top {
+  font-size: 11px;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+/* Footer */
+.card-footer {
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #666;
+}
