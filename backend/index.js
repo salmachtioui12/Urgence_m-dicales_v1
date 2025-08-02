@@ -36,7 +36,8 @@ app.use('/api/kpi', kpiRoutes);
 
 // WebSocket
 initWebSocket(server);
-
+const ambulancierRoutes = require('./routes/ambulancier.routes');
+app.use('/api/ambulanciers', ambulancierRoutes);
 // Simulation
 const { startAutoGeneration } = require('./services/appels.service');
 const { simulerDeplacement } = require('./services/agents.service');

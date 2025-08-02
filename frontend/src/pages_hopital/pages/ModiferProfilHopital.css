@@ -1,0 +1,368 @@
+   /* Variables */
+        :root {
+          --primary: #3b82f6;
+          --primary-hover: #2563eb;
+          --danger: #ef4444;
+          --danger-hover: #dc2626;
+          --success: #10b981;
+          --warning: #f59e0b;
+          --gray-50: #f9fafb;
+          --gray-100: #f3f4f6;
+          --gray-200: #e5e7eb;
+          --gray-300: #d1d5db;
+          --gray-400: #9ca3af;
+          --gray-500: #6b7280;
+          --gray-600: #4b5563;
+          --gray-700: #374151;
+          --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+          --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          --radius-sm: 0.125rem;
+          --radius: 0.25rem;
+          --radius-md: 0.375rem;
+          --radius-lg: 0.5rem;
+          --radius-xl: 0.75rem;
+          --radius-2xl: 1rem;
+          --radius-full: 9999px;
+        }
+
+        /* Base */
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+          color: var(--gray-700);
+          background-color: var(--gray-50);
+        }
+
+        /* Layout */
+        .modifier-profil-page {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 1rem;
+        }
+
+
+        /* Messages */
+        .message-alert {
+          padding: 1rem;
+          border-radius: var(--radius-md);
+          margin-bottom: 2rem;
+          display: flex;
+          align-items: center;
+          box-shadow: var(--shadow-sm);
+        }
+
+        .message-alert.success {
+          background-color: #ecfdf5;
+          color: #065f46;
+          border-left: 4px solid var(--success);
+        }
+
+        .message-alert.error {
+          background-color: #fef2f2;
+          color: #b91c1c;
+          border-left: 4px solid var(--danger);
+        }
+
+        .icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          margin-right: 0.5rem;
+        }
+
+        /* Formulaire */
+        .profil-form {
+          background: white;
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow);
+          padding: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .form-section {
+          margin-bottom: 2.5rem;
+          padding-bottom: 2rem;
+          border-bottom: 1px solid var(--gray-200);
+        }
+
+        .form-section:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .form-section h2 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: var(--primary);
+          margin-top: 0;
+          margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+        }
+
+        /* Grille */
+        .form-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1.5rem;
+        }
+
+        /* Groupes de formulaire */
+        .form-group {
+          margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+          display: block;
+          font-size: 0.875rem;
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+          color: var(--gray-700);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+          width: 100%;
+          padding: 0.625rem 0.875rem;
+          border: 1px solid var(--gray-300);
+          border-radius: var(--radius-md);
+          font-size: 0.875rem;
+          transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+          display: flex;
+          align-items: center;
+        }
+
+        .checkbox-group input {
+          width: auto;
+          margin-right: 0.5rem;
+        }
+
+        .checkbox-group label {
+          margin-bottom: 0;
+        }
+
+        .gps-coordinates {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.5rem;
+        }
+
+        /* Cartes ambulances */
+        .ambulances-list {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .ambulance-card {
+          background: var(--gray-50);
+          padding: 1.25rem;
+          border-radius: var(--radius-md);
+          display: grid;
+          grid-template-columns: 1fr 1fr auto;
+          gap: 1rem;
+          align-items: flex-end;
+          flex-wrap: wrap;
+          box-shadow: var(--shadow-sm);
+        }
+
+        /* Media preview */
+        .media-preview {
+          margin-top: 1rem;
+        }
+
+        .media-preview p {
+          font-size: 0.875rem;
+          color: var(--gray-500);
+          margin-bottom: 0.5rem;
+        }
+
+        .media-preview img {
+          max-width: 100%;
+          max-height: 150px;
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--gray-200);
+        }
+
+        /* Empty state */
+        .empty-state {
+          text-align: center;
+          padding: 2rem;
+          background-color: var(--gray-50);
+          border-radius: var(--radius-md);
+          color: var(--gray-500);
+        }
+
+        /* Boutons */
+        .add-button {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.375rem 0.75rem;
+          background-color: var(--primary);
+          color: white;
+          border: none;
+          border-radius: var(--radius-full);
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .add-button:hover {
+          background-color: var(--primary-hover);
+        }
+.delete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.delete-btn:hover {
+  background-color: #e5e7eb;
+  color: #ef4444;
+}
+
+.delete-btn:active {
+  transform: scale(0.95);
+}
+       
+        .form-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 1rem;
+          margin-top: 2rem;
+          padding-top: 2rem;
+          border-top: 1px solid var(--gray-200);
+        }
+
+        .cancel-button {
+          padding: 0.625rem 1.25rem;
+          background-color: white;
+          color: var(--gray-700);
+          border: 1px solid var(--gray-300);
+          border-radius: var(--radius-md);
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .cancel-button:hover {
+          background-color: var(--gray-50);
+        }
+
+        .submit-button {
+          padding: 0.625rem 1.25rem;
+          background-color: var(--primary);
+          color: white;
+          border: none;
+          border-radius: var(--radius-md);
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+          background-color: var(--primary-hover);
+        }
+
+        /* Loading */
+        .loading-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 50vh;
+        }
+
+        .loading-spinner {
+          width: 3rem;
+          height: 3rem;
+          border: 0.25rem solid var(--gray-200);
+          border-top-color: var(--primary);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        /* Error */
+        .error-container {
+          text-align: center;
+          padding: 3rem;
+          background-color: white;
+          border-radius: var(--radius-lg);
+          box-shadow: var(--shadow);
+          max-width: 500px;
+          margin: 2rem auto;
+        }
+
+        .error-container h2 {
+          color: var(--danger);
+          margin-top: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .profil-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+          }
+
+          .form-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .ambulance-card {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+
+          .gps-coordinates {
+            grid-template-columns: 1fr;
+          }
+
+          .form-actions {
+            flex-direction: column;
+          }
+
+          .cancel-button,
+          .submit-button {
+            width: 100%;
+          }
+        }

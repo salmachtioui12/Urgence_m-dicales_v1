@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import {
   Home,
   Map,
@@ -10,15 +10,22 @@ import {
   Filter,
   BarChart2,
   AlertTriangle,
+  LogOut, // Icône pour la déconnexion
 } from "lucide-react";
 import "./Sidebar.css";
 
 const Sidebar = () => {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   const menu = [
     { icon: <Home size={24} />, label: "Accueil", path: "/dashboard" },
-    { icon: <Map size={24} />, label: "cart", path: "/cart" },
+    { icon: <Map size={24} />, label: "Cart", path: "/cart" },
     { icon: <Ambulance size={24} />, label: "Ambulances", path: "/ambulances" },
     { icon: <PhoneCall size={24} />, label: "Appels d'urgence", path: "/appels" },
     { icon: <Hospital size={24} />, label: "Hôpitaux", path: "/hopitaux" },
@@ -36,11 +43,21 @@ const Sidebar = () => {
           className="sidebar-icon"
           title={item.label}
           style={{ cursor: "pointer" }}
-          onClick={() => navigate(item.path)}  // navigation au clic
+          onClick={() => navigate(item.path)}
         >
           {item.icon}
         </div>
       ))}
+
+      {/* Bouton déconnexion */}
+      <div
+        className="sidebar-icon logout-button"
+        title="Déconnexion"
+        style={{ cursor: "pointer", marginTop: "auto" }}
+        onClick={handleLogout}
+      >
+        <LogOut size={24} />
+      </div>
     </div>
   );
 };

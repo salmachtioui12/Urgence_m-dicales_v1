@@ -8,14 +8,49 @@ const EmbeddedAmbulanceSchema = new mongoose.Schema({
 }, { _id: false });
 
 //  Schéma hopital
+
 const HopitalSchema = new mongoose.Schema({
-  osmId: Number,//ID open street map 
+  osmId: Number,
   nom: { type: String, required: true },
   adresse: String,
   position: {
     lat: { type: Number, required: true },
     lng: { type: Number, required: true }
   },
+  region: String,
+
+  contact: {
+    telephoneUrgence: String,
+    telephoneSecondaire: String,
+    email: String,
+    siteWeb: String
+  },
+
+  responsable: {
+    nom: String,
+    contact: String
+  },
+
+  capacites: {
+    lits: Number,
+    sallesOperation: Number,
+    ambulances: Number,
+    urgenceDisponible: Boolean,
+    heuresOuverture: String
+  },
+
+  medias: {
+    logo: String,
+    imageCouverture: String
+  },
+   userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // si tu as un modèle User
+    required: true
+  },
+
+  profilVerifie: { type: Boolean, default: false },
+  dateCreation: { type: Date, default: Date.now },
   ambulances: [EmbeddedAmbulanceSchema]
 });
 

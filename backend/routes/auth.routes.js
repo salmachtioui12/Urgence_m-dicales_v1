@@ -21,6 +21,8 @@ function verifyToken(req, res, next) {
 }
 
 // Inscription
+const Hopital = require('../models/Hopital'); // n'oublie pas de l'importer
+
 router.post('/register', async (req, res) => {
   try {
     const { nom, email, password, role, details } = req.body;
@@ -29,26 +31,19 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Champs obligatoires manquants' });
     }
 
-    // Validation détails selon rôle
-    if (role === 'hopital') {
-      const { adresse, nombreAmbulances, responsable, telephone } = details || {};
-      if (!adresse || !nombreAmbulances || !responsable || !telephone) {
-        return res.status(400).json({ message: 'Champs détails hôpital obligatoires manquants' });
-      }
-    } else if (role === 'ambulancier') {
-      const { hopitalNom, numeroAmbulance, telephone } = details || {};
-      if (!hopitalNom || !numeroAmbulance || !telephone) {
-        return res.status(400).json({ message: 'Champs détails ambulancier obligatoires manquants' });
-      }
-    } else {
-      return res.status(400).json({ message: "Rôle invalide" });
-    }
+    // Validation selon rôle
+  if (role === 'hopital') {
+  const { adresse, position } = details || {};
+  if (!adresse || !position || typeof position.lat !== 'number' || typeof position.lng !== 'number') {
+    return res.status(400).json({ message: 'Adresse ou position lat/lng manquants ou invalides' });
+  }
+}
+
 
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'Email déjà utilisé' });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
       nom,
@@ -61,16 +56,58 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    const msg = role === 'ambulancier'
-      ? "Demande envoyée à l'hôpital. Veuillez attendre la validation."
-      : "Utilisateur créé avec succès";
+    // 🏥 Si le rôle est "hopital", crée l'entrée Hopital
+    if (role === 'hopital') {
+     const newHopital = new Hopital({
+  nom,
+  adresse: details.adresse || '',
+  position: {
+    lat: details.position.lat,
+    lng: details.position.lng
+  },
+  region: details.region || '',
+  contact: {
+    telephoneUrgence: details.telephoneUrgence || '',
+    telephoneSecondaire: details.telephoneSecondaire || '',
+    email,
+    siteWeb: details.siteWeb || ''
+  },
+  responsable: {
+    nom: details.responsableNom || '',
+    contact: details.responsableContact || ''
+  },
+  capacites: {
+    lits: details.lits || 0,
+    sallesOperation: details.sallesOperation || 0,
+    ambulances: details.ambulances || 0,
+    urgenceDisponible: details.urgenceDisponible || false,
+    heuresOuverture: details.heuresOuverture || ''
+  },
+  medias: {
+    logo: details.logo || '',
+    imageCouverture: details.imageCouverture || ''
+  },
+  profilVerifie: false,
+  userId: user._id,
 
-    res.status(201).json({ message: msg });
+});
+
+
+      await newHopital.save();
+    }
+
+    res.status(201).json({
+      message: role === 'ambulancier'
+        ? "Demande envoyée à l'hôpital. Veuillez attendre la validation."
+        : "Hôpital enregistré avec succès"
+    });
+
   } catch (error) {
     console.error("Erreur inscription:", error);
     res.status(500).json({ message: 'Erreur serveur lors de l’inscription.' });
   }
 });
+
 
 // Connexion
 router.post('/login', async (req, res) => {
@@ -113,7 +150,7 @@ router.post('/login', async (req, res) => {
 // Récupérer ambulanciers en attente pour un hôpital donné (route protégée)
 router.get('/demandes/ambulanciers/:hopitalNom', verifyToken, async (req, res) => {
   const { hopitalNom } = req.params;
-  console.log("Requête ambulanciers pour hôpital:", hopitalNom);
+ 
 
   try {
     const ambulanciers = await User.find({
@@ -122,7 +159,7 @@ router.get('/demandes/ambulanciers/:hopitalNom', verifyToken, async (req, res) =
       'details.hopitalNom': hopitalNom
     });
 
-    console.log("Ambulanciers trouvés:", ambulanciers.length);
+    
     res.json(ambulanciers);
   } catch (err) {
     console.error("Erreur récupération ambulanciers:", err);
@@ -131,27 +168,58 @@ router.get('/demandes/ambulanciers/:hopitalNom', verifyToken, async (req, res) =
 });
 
 // Valider un ambulancier (protégé)
+const Ambulancier = require('../models/Ambulancier'); // à importer tout en haut
+
 router.patch('/valider/ambulancier/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
+
   try {
-    await User.findByIdAndUpdate(id, { status: 'approuve' });
-    res.json({ message: 'Ambulancier validé avec succès' });
+    const user = await User.findById(id);
+
+    if (!user || user.role !== 'ambulancier') {
+      return res.status(404).json({ message: "Ambulancier introuvable" });
+    }
+
+    // Mise à jour du statut
+    user.status = 'approuve';
+    await user.save();
+
+    // Créer un ambulancier à partir des détails
+    const newAmbulancier = new Ambulancier({
+      ...user.details, // attention : structure bien les détails
+      email: user.email,
+      userId: user._id
+    });
+
+    await newAmbulancier.save();
+
+    res.json({ message: 'Ambulancier validé et enregistré avec succès' });
   } catch (err) {
     console.error("Erreur validation ambulancier:", err);
     res.status(500).json({ message: 'Erreur lors de la validation.' });
   }
 });
 
+
 // Rejeter un ambulancier (protégé)
 router.patch('/rejeter/ambulancier/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
+
   try {
-    await User.findByIdAndUpdate(id, { status: 'rejete' });
-    res.json({ message: 'Ambulancier rejeté avec succès' });
+    const user = await User.findById(id);
+    if (!user || user.role !== 'ambulancier') {
+      return res.status(404).json({ message: "Ambulancier introuvable" });
+    }
+
+    // Supprimer le user de la base
+    await User.findByIdAndDelete(id);
+
+    res.json({ message: 'Ambulancier rejeté et supprimé du système.' });
   } catch (err) {
     console.error("Erreur rejet ambulancier:", err);
     res.status(500).json({ message: 'Erreur lors du rejet.' });
   }
 });
+
 
 module.exports = router;

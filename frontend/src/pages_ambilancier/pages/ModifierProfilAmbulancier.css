@@ -1,0 +1,279 @@
+.profil-container {
+  max-width: 1400px;  /* Augmentation de la largeur maximale */
+  margin: 2rem auto;
+  padding: 2rem;  /* Plus d'espacement intérieur */
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #f8fafc;  /* Fond légèrement coloré */
+}
+
+.profil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;  /* Plus d'espace en bas */
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        background: linear-gradient(135deg, var(--primary), #9e9fd1ff);
+}
+
+.profil-header h1 {
+  color: #2c3e50;
+  font-size: 2.2rem;  /* Taille de police augmentée */
+  margin: 0;
+  font-weight: 700;
+}
+
+.update-button {
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  padding: 0.85rem 2rem;  /* Bouton plus large */
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(66, 153, 225, 0.3);
+}
+
+.update-button:hover {
+  background-color: #3182ce;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.profil-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;  /* Plus d'espace entre les cartes */
+}
+
+.profil-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;  /* Plus d'espace intérieur */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profil-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.profil-card h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  font-size: 1.5rem;  /* Taille de titre augmentée */
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
+  font-weight: 600;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));  /* Colonnes plus larges */
+  gap: 1.5rem;  /* Plus d'espace entre les éléments */
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.info-item:hover {
+  background-color: #edf2f7;
+}
+
+.label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 1rem;  /* Taille de police augmentée */
+  margin-bottom: 0.5rem;
+}
+
+.value {
+  color: #2d3748;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.status-disponible {
+  color: #38a169;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background-color: #f0fff4;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.status-en-mission {
+  color: #d69e2e;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background-color: #fffaf0;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.status-indisponible {
+  color: #e53e3e;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background-color: #fff5f5;
+  border-radius: 20px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.items-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.item {
+  background-color: #edf2f7;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  color: #2d3748;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.item:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+.no-data {
+  color: #718096;
+  font-style: italic;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+.error {
+  text-align: center;
+  padding: 3rem;
+  color: #e53e3e;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1200px) {
+  .profil-container {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .info-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .profil-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .profil-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .update-button {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .profil-card {
+    padding: 1.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-item {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .profil-container {
+    padding: 1rem;
+  }
+  
+  .profil-card {
+    padding: 1.25rem;
+  }
+  
+  .profil-card h2 {
+    font-size: 1.3rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,198 +2,340 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
-  const navigate = useNavigate();
+   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError(null);
+  setSuccess(null);
+  setIsLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        localStorage.removeItem("token");
-        if (res.status === 403 && data.message) {
-          setError(data.message);
-        } else {
-          setError(data.message || "Erreur lors de la connexion");
-        }
-      } else {
-        setSuccess("Connexion réussie !");
-        localStorage.setItem("token", data.token);
+    if (res.ok) {
+      console.log("Connexion réussie !");
+      console.log("User reçu:", data.user);
 
-        // Redirection selon le rôle
-        setTimeout(() => {
-          if (data.user.role === "hopital") {
-            navigate("/ambulanciers-en-attente");
-          } else {
+      localStorage.setItem("token", data.token);
+localStorage.setItem("user", JSON.stringify(data.user)); // 🔧 Correction
+
+      setSuccess("Connexion réussie !");
+      setError("");
+
+      // 🔄 Déclenche un événement pour prévenir App.jsx d'un changement
+      window.dispatchEvent(new Event("tokenUpdated"));
+
+      // ✅ Redirection selon le rôle
+      setTimeout(() => {
+        const role = data.user.role?.toLowerCase();
+        switch (role) {
+          case "hopital":
+            navigate("/hopital/dashboard");
+            break;
+          case "ambulancier":
+            navigate("/ambulancier/appels");
+            break;
+          case "operateur":
             navigate("/dashboard");
-          }
-        }, 1500);
-      }
-    } catch (err) {
-      setError("Erreur réseau");
-      localStorage.removeItem("token");
+            break;
+          default:
+            console.warn("Rôle inconnu :", role);
+            setError("Rôle utilisateur non reconnu");
+        }
+      }, 1000);
+    } else {
+      setError(data.message || "Identifiants invalides");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError("Erreur réseau");
+    localStorage.removeItem("token");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
-    <div
-      style={{
-        maxWidth: 400,
-        margin: "60px auto",
-        padding: 30,
-        borderRadius: 12,
-        boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
-        backgroundColor: "#fff",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      }}
-    >
-      <h2 style={{ textAlign: "center", marginBottom: 30, color: "#1e88e5" }}>
-        Connexion
-      </h2>
+    <div className="login-page">
+      <div className="login-header">
+        <h1>Bienvenue</h1>
+        <p>Connectez-vous pour accéder à votre compte</p>
+      </div>
 
-      {error && (
-        <div
-          style={{
-            backgroundColor: "#ffe6e6",
-            color: "#cc0000",
-            padding: 10,
-            borderRadius: 6,
-            marginBottom: 15,
-            textAlign: "center",
-          }}
-        >
-          {error}
+      <div className="login-form-container">
+        {error && (
+          <div className="alert error">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="alert success">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>{success}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="exemple@email.com"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Mot de passe</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
+
+       
+
+          <button type="submit" disabled={isLoading} className="login-button">
+            {isLoading ? (
+              <>
+                <span className="spinner"></span>
+                Connexion...
+              </>
+            ) : 'Se connecter'}
+          </button>
+        </form>
+
+        <div className="login-footer">
+          <p>Pas encore de compte ? <Link to="/register">S'inscrire</Link></p>
         </div>
-      )}
+      </div>
 
-      {success && (
-        <div
-          style={{
-            backgroundColor: "#e6ffee",
-            color: "#006600",
-            padding: 10,
-            borderRadius: 6,
-            marginBottom: 15,
-            textAlign: "center",
-          }}
-        >
-          {success}
-        </div>
-      )}
+      <style >{`
+        .login-page {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+          padding: 2rem;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
 
-      <form onSubmit={handleSubmit}>
-        <label
-          style={{
-            display: "block",
-            marginBottom: 6,
-            fontWeight: "600",
-            color: "#444",
-          }}
-          htmlFor="email"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 20,
-            borderRadius: 8,
-            border: "1.5px solid #ccc",
-            fontSize: 16,
-            transition: "border-color 0.3s",
-          }}
-          onFocus={(e) => (e.target.style.borderColor = "#1e88e5")}
-          onBlur={(e) => (e.target.style.borderColor = "#ccc")}
-          placeholder="Entrez votre email"
-        />
+        .login-header {
+          text-align: center;
+          margin-bottom: 3rem;
+          max-width: 400px;
+        }
 
-        <label
-          style={{
-            display: "block",
-            marginBottom: 6,
-            fontWeight: "600",
-            color: "#444",
-          }}
-          htmlFor="password"
-        >
-          Mot de passe
-        </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 25,
-            borderRadius: 8,
-            border: "1.5px solid #ccc",
-            fontSize: 16,
-            transition: "border-color 0.3s",
-          }}
-          onFocus={(e) => (e.target.style.borderColor = "#1e88e5")}
-          onBlur={(e) => (e.target.style.borderColor = "#ccc")}
-          placeholder="Entrez votre mot de passe"
-        />
+        .login-header h1 {
+          font-size: 2rem;
+          font-weight: 600;
+          color: #1e293b;
+          margin-bottom: 0.5rem;
+        }
 
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: 14,
-            backgroundColor: "#1e88e5",
-            border: "none",
-            borderRadius: 8,
-            color: "white",
-            fontWeight: "700",
-            fontSize: 18,
-            cursor: "pointer",
-            transition: "background-color 0.3s",
-          }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#1565c0")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#1e88e5")}
-        >
-          Se connecter
-        </button>
-      </form>
+        .login-header p {
+          color: #64748b;
+          font-size: 1rem;
+        }
 
-      <p
-        style={{
-          marginTop: 30,
-          textAlign: "center",
-          fontSize: 14,
-          color: "#555",
-        }}
-      >
-        Pas encore de compte ?{" "}
-        <Link
-          to="/register"
-          style={{ color: "#1e88e5", textDecoration: "underline" }}
-        >
-          Inscrivez-vous ici
-        </Link>
-      </p>
+        .login-form-container {
+          width: 100%;
+          max-width: 500px;
+          background-color: white;
+          padding: 2rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 0.5rem;
+        }
+
+        .alert {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          margin-bottom: 1.5rem;
+          border-radius: 0.375rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        .alert svg {
+          width: 1.25rem;
+          height: 1.25rem;
+          margin-right: 0.75rem;
+        }
+
+        .alert.error {
+          background-color: #fef2f2;
+          color: #dc2626;
+        }
+
+        .alert.success {
+          background-color: #f0fdf4;
+          color: #16a34a;
+        }
+
+        .login-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .form-group label {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #334155;
+        }
+
+        .form-group input {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid #cbd5e1;
+          border-radius: 0.375rem;
+          font-size: 0.875rem;
+          transition: all 0.15s ease;
+        }
+
+        .form-group input:focus {
+          outline: none;
+          border-color: #2979ff;
+          box-shadow: 0 0 0 1px #2979ff;
+        }
+
+        .form-group input::placeholder {
+          color: #94a3b8;
+        }
+
+        .form-options {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 0.5rem 0;
+        }
+
+        .remember-me {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .remember-me input {
+          width: 1rem;
+          height: 1rem;
+          accent-color: #2979ff;
+        }
+
+        .remember-me label {
+          font-size: 0.875rem;
+          color: #475569;
+          cursor: pointer;
+        }
+
+        .forgot-password {
+          font-size: 0.875rem;
+          color: #2979ff;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.15s;
+        }
+
+        .forgot-password:hover {
+          color: #2979ff;
+          text-decoration: underline;
+        }
+
+        .login-button {
+          width: 100%;
+          padding: 0.75rem;
+          background-color: #2979ff;
+          color: white;
+          border: none;
+          border-radius: 0.375rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+        }
+
+        .login-button:hover {
+          background-color: #2979ff;
+        }
+
+        .login-button:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          background-color: #2979ff;
+        }
+
+        .spinner {
+          width: 1.25rem;
+          height: 1.25rem;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .login-footer {
+          margin-top: 1.5rem;
+          text-align: center;
+          font-size: 0.875rem;
+          color: #64748b;
+        }
+
+        .login-footer a {
+          color: #2979ff";
+          font-weight: 500;
+          text-decoration: none;
+          transition: color 0.15s;
+        }
+
+        .login-footer a:hover {
+          color: #2979ff;
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 }
